@@ -23,12 +23,29 @@ class LoginActivity : AppCompatActivity() {
             insets
         }
 
-        if(FirebaseAuth.getInstance().currentUser == null){
+        val auth = FirebaseAuth.getInstance()//Firebase Authentication instance
+        val user = auth.currentUser//current logged in user
+
+        if (user != null) {
+            user.reload().addOnCompleteListener { task ->//Firebase checks with the server whether the user still exists.
+                if (task.isSuccessful) {
+                    if (auth.currentUser == null) {
+                        //if no user is logged in
+                        signIn()
+                    } else {
+                        //if user exist move to mainactivity
+                        transactToNextScreen()
+                    }
+                } else {
+                    //error with loading user
+                    signIn()
+                }
+            }
+        } else {
+            // if no logged in them log in screen
             signIn()
         }
-        else{
-            transactToNextScreen()
-        }
+
     }
 
     // See: https://developer.android.com/training/basics/intents/result
