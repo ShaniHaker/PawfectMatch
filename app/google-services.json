@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "994589117110",
+    "project_id": "pawfect-match-21a44",
+    "storage_bucket": "pawfect-match-21a44.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:994589117110:android:d6dd286ea203bf6f11b417",
+        "android_client_info": {
+          "package_name": "com.example.pawfectmatchapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "994589117110-69pl39cbvij9dkic19dv8lkgdg4793tp.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.pawfectmatchapp",
+            "certificate_hash": "2f77de72756a4420bfe5a06e191751efcb010d2b"
+          }
+        },
+        {
+          "client_id": "994589117110-h91rnhmvg5jf7neud80rvqbqfud66rnd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBkleUzkUu1Z3bJjXE2KAqq4rAi3A5tDBI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "994589117110-h91rnhmvg5jf7neud80rvqbqfud66rnd.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

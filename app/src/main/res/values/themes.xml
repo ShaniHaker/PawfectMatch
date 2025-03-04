@@ -1,0 +1,41 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme -->
+    <style name="Base.Theme.AdoptDogsApp" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="colorPrimary">#5D4037</item> <!-- Dark Brown Background for Toolbar -->
+        <item name="colorOnPrimary">#FFFFFF</item> <!-- White text on Toolbar -->
+
+        <item name="colorSecondary">#D7CCC8</item> <!-- Beige -->
+        <item name="colorOnSecondary">#5D4037</item> <!-- Text on Beige -->
+
+        <item name="android:windowBackground">#DBC3BC</item> <!-- General App Background -->
+        <item name="android:textColorPrimary">#FFFFFF</item> <!-- Primary Text Color -->
+    </style>
+
+    <style name="Theme.AdoptDogsApp" parent="Base.Theme.AdoptDogsApp">
+        <item name="android:statusBarColor">#4E342E</item> <!-- Even Darker Brown for Status Bar -->
+        <item name="android:windowActionBar">true</item>
+        <item name="android:windowNoTitle">false</item>
+    </style>
+
+    <!-- Custom Theme for Firebase Authentication UI -->
+    <style name="FirebaseLoginTheme" parent="Base.Theme.AdoptDogsApp">
+        <item name="colorPrimary">#5D4037</item> <!-- Light Brown Buttons -->
+        <item name="colorOnPrimary">#FFFFFF</item> <!-- White Text on Buttons -->
+
+        <item name="colorSecondary">#D7CCC8</item> <!-- Beige Buttons -->
+        <item name="colorOnSecondary">#FFFFFF</item> <!-- Dark Brown Text on Beige -->
+
+        <item name="android:buttonStyle">@style/FirebaseButtonStyle</item>
+
+        <!-- Ensure title is visible-->
+        <item name="android:windowActionBar">true</item>
+        <item name="android:windowNoTitle">false</item>
+    </style>
+
+    <!-- Custom button style for Firebase UI -->
+    <style name="FirebaseButtonStyle" parent="Widget.MaterialComponents.Button">
+        <item name="android:backgroundTint">#A1887F</item> <!-- Light Brown -->
+        <item name="android:textColor">#FFFFFF</item> <!-- White Text on Button -->
+        <item name="cornerRadius">16dp</item> <!-- Rounded Buttons -->
+    </style>
+</resources>
