@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp"
+    app:cardCornerRadius="12dp"
+    app:cardElevation="10dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- תמונת מאמר -->
+        <ImageView
+            android:id="@+id/articleImage"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:scaleType="centerCrop"
+            android:adjustViewBounds="true"/>
+
+        <!-- 🔹 LinearLayout פנימי לכל התוכן מתחת לתמונה -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="8dp">
+
+            <!-- כותרת המאמר -->
+            <TextView
+                android:id="@+id/articleTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Article Title"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:paddingTop="8dp"
+                android:textColor="@color/black"/>
+
+            <!-- תקציר המאמר -->
+            <TextView
+                android:id="@+id/articleSummary"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Short summary of the article"
+                android:maxLines="4"
+                android:ellipsize="end"
+                android:textSize="14sp"
+                android:paddingTop="4dp"/>
+
+            <!-- 🔹 כפתור Material לקריאת המאמר -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnReadMore"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Read More"
+                android:padding="8dp"
+                android:layout_marginTop="8dp"
+                app:cornerRadius="8dp"
+                app:backgroundTint="@color/teal_700"
+                app:icon="@drawable/baseline_open_in_new_24"
+                app:iconGravity="textStart"
+                android:textColor="@android:color/white"/>
+        </LinearLayout>
+
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>
