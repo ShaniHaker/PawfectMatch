@@ -18,6 +18,8 @@ class FireStoreActivity : AppCompatActivity() {
     private val db = Firebase.firestore
     private val dogsCollection = db.collection(Constants.DB.DOGS_COLLECTION_REF) // 🔹 קולקציה לכלבים
     private val usersCollection = db.collection("Users") // 🔹 קולקציה למשתמשים
+    private val articlesCollection = db.collection("Articles") // 🔹 קולקשן למאמרים
+
 
     private var userFavorites: List<String> = emptyList() // 🔹 רשימת הכלבים המועדפים של המשתמש
 
@@ -45,6 +47,9 @@ class FireStoreActivity : AppCompatActivity() {
 
         // ✅ אפשר להשאיר את זה כדי ללמוד איך להעלות נתונים לפיירסטור אבל זה לא הכרחי
         // addDogsCollectionToFireStore()
+
+        //one time for uploading article data to firestore
+       // uploadArticlesToFirestore()
     }
 
     /**
@@ -134,5 +139,35 @@ class FireStoreActivity : AppCompatActivity() {
         dogsCollection.add(animal)
             .addOnSuccessListener { println("✅ הכלב נוסף בהצלחה: $name") }
             .addOnFailureListener { e -> println("❌ שגיאה בהוספת הכלב: ${e.message}") }
+    }
+
+
+    private fun uploadArticlesToFirestore() {
+        val articles = listOf(
+            mapOf(
+                "title" to "13 most important questions to ask when adopting a dog",
+                "summary" to "Adopting a new dog is a big responsibility — There’s no shame in not being quite ready yet! Consider these questions before you adopt a dog.\nBe honest with yourself — Having a dog can be time-consuming and expensive. Are you able to meet their needs?",
+                "articleUrl" to "https://www.betterpet.com/learn/questions-to-ask-when-adopting-a-dog",
+                "imageUrl" to "https://firebasestorage.googleapis.com/v0/b/pawfect-match-21a44.firebasestorage.app/o/Articles%20Photos%2F67b39b4b5ea53f6e950a5937_AdobeStock_233995176-scaled-p-1080.avif?alt=media&token=a14f657d-efd3-4b20-93c4-b43fabd61d5e"
+            ),
+            mapOf(
+                "title" to "How to Take Care of a Dog: 8 Vet-Recommended Tips",
+                "summary" to "As a responsible pet parent, ensuring your canine companion’s well-being is key to fostering a long, healthy, and happy life for your beloved dog.\nProper dog care encompasses a range of essential aspects, including providing adequate nutrition, regular exercise, proper grooming, a comfortable living environment, regular veterinary check-ups, effective training, reliable identification, and safe handling practices.",
+                "articleUrl" to "https://thevets.com/resources/pet-health-care/how-to-take-care-of-a-dog",
+                "imageUrl" to "https://firebasestorage.googleapis.com/v0/b/pawfect-match-21a44.firebasestorage.app/o/Articles%20Photos%2Fperson-taking-care-of-a-dog-2.jpg?alt=media&token=dbc75734-4928-4e8e-9be4-66d272bcb675"
+            ),
+            mapOf(
+                "title" to "11 Requirements to Adopt a Dog From a Shelter: Application, Fees & Considerations",
+                "summary" to "Adopting a dog from a shelter is a rewarding experience that gives a second chance to a deserving animal and helps open resources for other pets in need. However, each rescue or shelter organization is likely to have guidelines that you need to follow before you can take your new dog home with you. Here’s a list of the most common requirements that you might need to meet during the adoption process.",
+                "articleUrl" to "https://www.dogster.com/lifestyle/requirements-to-adopt-a-dog-from-a-shelter",
+                "imageUrl" to "https://firebasestorage.googleapis.com/v0/b/pawfect-match-21a44.firebasestorage.app/o/Articles%20Photos%2F67b39b4b5ea53f6e950a5937_AdobeStock_233995176-scaled-p-1080.avif?alt=media&token=a14f657d-efd3-4b20-93c4-b43fabd61d5e"
+            )
+        )
+
+        for (article in articles) {
+            articlesCollection.add(article)
+                .addOnSuccessListener { println("✅ מאמר נוסף בהצלחה: ${article["title"]}") }
+                .addOnFailureListener { e -> println("❌ שגיאה בהעלאת מאמר: ${e.message}") }
+        }
     }
 }

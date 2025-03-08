@@ -1,5 +1,6 @@
 package com.example.pawfectmatchapp
 
+import android.content.Intent
 import android.os.Bundle
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
@@ -36,6 +37,9 @@ class MainActivity : AppCompatActivity() {
 
         // ✅ ודא שהמשתמש קיים ב-Firestore (ללא בדיקת התחברות)
         checkUserInFirestore()
+
+        //val intent  = Intent(this, FireStoreActivity::class.java)
+        //startActivity(intent)
     }
 
     /**

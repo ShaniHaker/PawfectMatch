@@ -11,6 +11,7 @@ import com.example.pawfectmatchapp.adapters.DogAdapter
 import com.example.pawfectmatchapp.databinding.FragmentDashboardBinding
 import com.example.pawfectmatchapp.models.DogData
 import android.util.Log
+import android.widget.Toast
 
 class DashboardFragment : Fragment() {
 
@@ -53,6 +54,10 @@ class DashboardFragment : Fragment() {
 
             // ✅ עדכון IDs של המועדפים לפני העדכון הכללי
             dogAdapter.updateFavorites(favoriteDogsList.map { it.id })
+
+            if (dogs.isEmpty()){
+                Toast.makeText(requireContext(), "🐶 Woof woof! Don't forget to add your favorites!",Toast.LENGTH_SHORT).show()
+            }
 
             // 📌 רק קריאה אחת ל- notifyDataSetChanged()
             dogAdapter.notifyDataSetChanged()
