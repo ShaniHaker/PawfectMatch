@@ -63,4 +63,16 @@ dependencies {
     //firebase auth
 
     implementation(libs.firebase.ui.auth)
+
+
+    //firebase storage
+    implementation(libs.firebase.storage)
+
+    //firebase firestore
+    implementation(libs.firebase.firestore)
+
+    //glide library for loading images
+
+    implementation (libs.glide)
+    annotationProcessor (libs.compiler)
 }
