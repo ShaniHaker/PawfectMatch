@@ -5,14 +5,14 @@
     android:layout_height="wrap_content"
     android:layout_margin="8dp"
     app:cardCornerRadius="12dp"
-    app:cardElevation="10dp"
+    app:cardElevation="30dp"
     >
 <!--item dog defines the layout of each dog item-->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="8dp"
+        android:padding="0dp"
         >
         <!--dog image section-->
         <RelativeLayout
@@ -54,7 +54,7 @@
             android:orientation="horizontal"
             android:gravity="center_vertical"
             android:paddingTop="8dp"
-            android:background="#CEBDB6"
+            android:background="#FBF4F4"
 
             >
 
@@ -93,11 +93,12 @@
                 android:layout_height="20dp"
                 app:icon="@drawable/dots"
                 app:iconSize="30dp"
-                android:backgroundTint="#CEBDB6"
+                android:backgroundTint="#FBF4F4"
                 app:iconTint="@color/black"
                 android:clickable="true"
                 android:contentDescription="nu"
                 style="?borderlessButtonStyle"
+
                 />
         </LinearLayout>
 

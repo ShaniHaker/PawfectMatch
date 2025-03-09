@@ -1,9 +1,11 @@
 package com.example.pawfectmatchapp.ui.home
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -26,6 +28,11 @@ class HomeFragment : Fragment() {
     private val auth = FirebaseAuth.getInstance()
     private val db = FirebaseFirestore.getInstance()
 
+    // משתנים לשמירת הפילטרים שנבחרו
+    private var selectedBreed: String? = null
+    private var selectedAge: Int? = null
+    private var selectedName: String? = null
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
@@ -36,7 +43,7 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // ✅ אתחול האדפטר עם רשימה ריקה של כלבים ורשימת מועדפים ריקה
+        // ✅ אתחול האדפטר
         dogAdapter = DogAdapter(
             dogList,
             favoriteDogs,
@@ -47,20 +54,110 @@ class HomeFragment : Fragment() {
         binding.recyclerViewDogs.layoutManager = LinearLayoutManager(requireContext())
         binding.recyclerViewDogs.adapter = dogAdapter
 
-        // ✅ הקשבה למועדפים ועדכון בזמן אמת
-        homeViewModel.favoriteDogs.observe(viewLifecycleOwner) { favorites ->
-            dogAdapter.updateFavorites(favorites) // ✅ עדכון המועדפים באדפטר
-        }
-
-        // ✅ הקשבה לכלבים מה-ViewModel
+        // ✅ האזנה לנתוני הכלבים מה-ViewModel
         homeViewModel.dogs.observe(viewLifecycleOwner) { dogs ->
             dogList.clear()
             dogList.addAll(dogs)
-            dogAdapter.notifyDataSetChanged()
+            applyFilters() // מבצע סינון במקרה שיש פילטרים פעילים
         }
 
-        // ✅ הבאת הנתונים מה-Firestore
+        // ✅ האזנה לנתוני המועדפים
+        homeViewModel.favoriteDogs.observe(viewLifecycleOwner) { favorites ->
+            dogAdapter.updateFavorites(favorites)
+        }
+
+        // ✅ טעינת הכלבים מה-Firestore
         homeViewModel.fetchDogsFromFirestore()
+
+        // ✅ האזנה לכפתור הסינון
+        binding.btnFilter.setOnClickListener {
+            openFilterDialog()
+        }
+
+        // ✅ האזנה לכפתור ניקוי הסינון
+        binding.btnClearFilter.setOnClickListener {
+            clearFilters()
+        }
+    }
+
+    /**
+     * ✅ פתיחת דיאלוג הפילטרים
+     */
+    private fun openFilterDialog() {
+        val availableBreeds = homeViewModel.getAvailableBreeds()
+        val availableAges = homeViewModel.getAvailableAges()
+
+        Log.d("FilterDebug", "✅ שליחת גזעים לדיאלוג: $availableBreeds")
+        Log.d("FilterDebug", "✅ שליחת גילאים לדיאלוג: $availableAges")
+
+        val filterDialog = FilterBottomSheetDialog(
+            availableBreeds,
+            availableAges
+        ) { breed, name, age ->
+            selectedBreed = breed
+            selectedName = name
+            selectedAge = age
+            applyFilters()
+        }
+        filterDialog.show(parentFragmentManager, "FilterBottomSheetDialog")
+    }
+
+    /**
+     * ✅ סינון הכלבים בהתאם לקטגוריות שנבחרו
+     */
+    /**
+     * ✅ סינון הכלבים בהתאם לקטגוריות שנבחרו
+     */
+    private fun applyFilters() {
+        val filteredList = homeViewModel.dogs.value?.filter { dog ->
+            val dogName = dog.name.trim()
+            val dogBreed = dog.breed.trim()
+            val dogAge = dog.age
+
+            val selectedBreedFixed = selectedBreed?.trim()
+            val selectedNameFixed = selectedName?.trim()
+            val selectedAgeFixed = selectedAge
+
+            // ✅ בדיקות התאמה לכל שדה בנפרד
+            val nameMatch = selectedNameFixed?.let { it.equals(dogBreed, ignoreCase = true) } ?: true
+            val breedMatch = selectedBreedFixed?.let { it.equals(dogName, ignoreCase = true) } ?: true
+            val ageMatch = selectedAgeFixed?.let { it == dogAge } ?: true
+
+            nameMatch && breedMatch && ageMatch
+        } ?: emptyList()
+
+        if (filteredList.isEmpty()) {
+            Log.w("FilterDebug", "❌ No matching dogs found.")
+
+            // ✅ הצגת טוסט למשתמש שאין התאמות
+            requireActivity().runOnUiThread {
+                Toast.makeText(requireContext(), "❌ No matching dogs found. Try different filters!", Toast.LENGTH_LONG).show()
+            }
+
+            // ✅ במקום להציג את כל הכלבים מחדש, נשאיר את הרשימה ריקה
+            dogAdapter.updateDogs(emptyList())
+
+        } else {
+            Log.d("FilterDebug", "✅ נמצא ${filteredList.size} כלבים תואמים לסינון.")
+            dogAdapter.updateDogs(filteredList)
+        }
+    }
+
+
+
+
+
+
+
+
+    /**
+     * ✅ פונקציה לניקוי הסינון והצגת כל הכלבים מחדש
+     */
+    private fun clearFilters() {
+        selectedBreed = null
+        selectedName = null
+        selectedAge = null
+        dogAdapter.updateDogs(homeViewModel.dogs.value ?: emptyList())
     }
 
     /**
@@ -82,7 +179,7 @@ class HomeFragment : Fragment() {
             userDoc.update("favorites", favorites)
                 .addOnSuccessListener {
                     println("✅ Favorites updated successfully")
-                    homeViewModel.fetchFavoriteDogs() // 🔹 עדכון רשימת המועדפים אחרי שינוי
+                    homeViewModel.fetchFavoriteDogs()
                 }
                 .addOnFailureListener { println("❌ Failed to update favorites") }
         }

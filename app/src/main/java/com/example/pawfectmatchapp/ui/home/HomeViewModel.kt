@@ -76,4 +76,18 @@ class HomeViewModel : ViewModel() {
                 }
             }
     }
+
+    fun getAvailableBreeds(): List<String> {
+        val breeds = dogs.value?.map { it.breed }?.distinct()?.sorted() ?: emptyList()
+        Log.d("FilterDebug", "📌 גזעים זמינים: $breeds")
+        return breeds
+    }
+
+    fun getAvailableAges(): List<Int> {
+        val ages = dogs.value?.map { it.age }?.distinct()?.sorted() ?: emptyList()
+        Log.d("FilterDebug", "📌 גילאים זמינים: $ages")
+        return ages
+    }
+
+
 }
