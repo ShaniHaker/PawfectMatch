@@ -1,5 +1,6 @@
 package com.example.pawfectmatchapp.adapters
 
+import android.content.Intent
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -10,6 +11,7 @@ import com.example.pawfectmatchapp.R
 import com.example.pawfectmatchapp.models.DogData
 import com.google.android.material.textview.MaterialTextView
 import androidx.appcompat.widget.AppCompatImageView
+import com.example.pawfectmatchapp.PlacesDetailsActivity
 import com.google.android.material.button.MaterialButton
 
 class DogAdapter(
@@ -27,8 +29,8 @@ class DogAdapter(
         val dogGender: MaterialTextView = view.findViewById(R.id.dogGender)
         val dogDescription: MaterialTextView = view.findViewById(R.id.dogDescription)
         val favoriteButton: MaterialButton = view.findViewById(R.id.favoriteButton)
-        val moreInfoButton: MaterialButton = view.findViewById(R.id.main_BTN) // 🔹 כפתור להרחבת המידע
-        val expandableLayout: View = view.findViewById(R.id.expandableLayout) // 🔹 תצוגת המידע המורחב
+        val moreInfoButton: MaterialButton = view.findViewById(R.id.main_BTN)
+        val expandableLayout: View = view.findViewById(R.id.expandableLayout)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DogViewHolder {
@@ -39,69 +41,75 @@ class DogAdapter(
     override fun onBindViewHolder(holder: DogViewHolder, position: Int) {
         val dog = dogs[position]
 
-        // 🎨 עדכון UI לכל כלב
         holder.dogName.text = dog.name
         holder.dogAge.text = "Age: ${dog.age}"
         holder.dogBreed.text = "Breed: ${dog.breed}"
         holder.dogGender.text = "Gender: ${dog.gender}"
         holder.dogDescription.text = "Description: ${dog.description}"
 
-        // 🔹 בדיקת נתונים
-        Log.d("DogAdapter", "🎨 עדכון תצוגה לכלב: ${dog.name} | גזע: ${dog.breed} | מין: ${dog.gender} | תיאור: ${dog.description}")
+        // Logging data for debugging
+        Log.d("DogAdapter", "Updating view for dog: ${dog.name} | Breed: ${dog.breed} | Gender: ${dog.gender} | Description: ${dog.description}")
 
-        // 📸 טעינת תמונת הכלב
+        // Load dog image using Glide
         Glide.with(holder.itemView.context)
             .load(dog.imageUrl)
             .fitCenter()
             .into(holder.dogImage)
 
-        // ✅ עדכון מצב המועדפים
+        holder.itemView.findViewById<MaterialButton>(R.id.btnShelterDetails).setOnClickListener {
+            val context = holder.itemView.context
+            val intent = Intent(context, PlacesDetailsActivity::class.java)
+            intent.putExtra("PLACE_ID", "ChIJc9YSFYxc-hQRYIrEUpKSg_Y") // Place ID
+            context.startActivity(intent)
+        }
+
+        // Update favorite status
         val isFavorite = favoriteDogs.contains(dog.id)
-        Log.d("DogAdapter", "🐶 כלב: ${dog.name} | ID: ${dog.id} | במועדפים: $isFavorite | רשימת מועדפים: ${favoriteDogs.joinToString()}")
+        Log.d("DogAdapter", "Dog: ${dog.name} | ID: ${dog.id} | Favorite: $isFavorite | Favorite List: ${favoriteDogs.joinToString()}")
         updateFavoriteUI(holder.favoriteButton, isFavorite)
 
-        // 🖱️ לחיצה על כפתור המועדפים (לב)
+        // Click listener for favorite button
         holder.favoriteButton.setOnClickListener {
             val newFavoriteStatus = !isFavorite
-            Log.d("DogAdapter", "🔄 שינוי סטטוס מועדפים לכלב ${dog.name}: $newFavoriteStatus")
+            Log.d("DogAdapter", "Changing favorite status for ${dog.name}: $newFavoriteStatus")
             updateFavoriteUI(holder.favoriteButton, newFavoriteStatus)
             onFavoriteClicked(dog, newFavoriteStatus)
         }
 
-        // 🖱️ לחיצה על הכפתור להרחבת המידע
+        // Click listener for expanding details
         holder.moreInfoButton.setOnClickListener {
             val isVisible = holder.expandableLayout.visibility == View.VISIBLE
             holder.expandableLayout.visibility = if (isVisible) View.GONE else View.VISIBLE
-            Log.d("DogAdapter", "🔄 שינוי תצוגת הרחבה לכלב ${dog.name}: ${!isVisible}")
+            Log.d("DogAdapter", "Toggling details view for ${dog.name}: ${!isVisible}")
         }
     }
 
     override fun getItemCount(): Int = dogs.size
 
     /**
-     * ✅ עדכון רשימת הכלבים והצגת השינויים
+     * Updates the list of dogs and refreshes the adapter
      */
     fun updateDogs(newDogs: List<DogData>) {
-        Log.d("DogAdapter", "🔄 עדכון רשימת הכלבים (גודל חדש: ${newDogs.size})")
+        Log.d("DogAdapter", "Updating dog list (New size: ${newDogs.size})")
         dogs.clear()
         dogs.addAll(newDogs)
         notifyDataSetChanged()
     }
 
     /**
-     * ✅ עדכון רשימת המועדפים בזמן אמת
+     * Updates the favorite list in real-time
      */
     fun updateFavorites(newFavorites: List<String>) {
-        Log.d("DogAdapter", "💖 עדכון מועדפים: ${newFavorites.joinToString()}") // ✅ בדיקה אם יש שם IDים נכונים
+        Log.d("DogAdapter", "Updating favorites: ${newFavorites.joinToString()}")
         favoriteDogs = newFavorites.toList()
         notifyDataSetChanged()
     }
 
     /**
-     * ✅ פונקציה שמעדכנת את כפתור המועדפים (מוסיפה או מסירה לב)
+     * Updates the favorite button UI (adds or removes the heart icon)
      */
     private fun updateFavoriteUI(button: MaterialButton, isFavorite: Boolean) {
-        Log.d("DogAdapter", "🎨 עדכון UI של כפתור: ${if (isFavorite) "❤️ מלא" else "🤍 ריק"}")
+        Log.d("DogAdapter", "Updating UI for favorite button: ${if (isFavorite) "Filled Heart" else "Outlined Heart"}")
         button.setIconResource(if (isFavorite) R.drawable.heart else R.drawable.heart_outlined)
     }
 }

@@ -24,7 +24,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- שדה חיפוש לפי שם -->
+
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/textInputLayoutName"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
@@ -43,7 +43,7 @@
             android:layout_height="wrap_content"/>
     </com.google.android.material.textfield.TextInputLayout>
 
-    <!-- Dropdown לבחירת גזע -->
+    <!-- Dropdown  -->
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/dropdownBreed"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
@@ -68,7 +68,7 @@
             />
     </com.google.android.material.textfield.TextInputLayout>
 
-    <!-- Dropdown לבחירת גיל -->
+    <!-- Dropdown  -->
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/dropdownAge"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
@@ -91,15 +91,16 @@
             android:padding="12dp"/>
     </com.google.android.material.textfield.TextInputLayout>
 
-    <!-- כפתור אישור -->
-    <com.google.android.material.button.MaterialButton
+
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/btnApplyFilter"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Apply Filter"
         app:backgroundTint="@color/brown"
         android:textColor="@color/white"
-        app:cornerRadius="8dp"
+        app:cornerRadius="2dp"
+        android:elevation="30dp"
         app:strokeWidth="2dp"
         app:strokeColor="@color/black"
         app:layout_constraintTop_toBottomOf="@id/dropdownAge"

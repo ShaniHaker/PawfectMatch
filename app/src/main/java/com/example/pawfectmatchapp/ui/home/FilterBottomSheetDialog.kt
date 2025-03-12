@@ -20,8 +20,6 @@ class FilterBottomSheetDialog(
     private var _binding: DialogFilterBinding? = null
     private val binding get() = _binding!!
 
-
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -33,39 +31,39 @@ class FilterBottomSheetDialog(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        Log.d("FilterDebug", "📌 נתונים שהתקבלו לדיאלוג: גזעים = $availableBreeds | גילאים = $availableAges")
+        Log.d("FilterDebug", "Received data for the dialog: Breeds = $availableBreeds | Ages = $availableAges")
 
-        // 🔹 הגדרת תיבת בחירה לגזע
+        // Set up breed selection dropdown
         val breedAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, availableBreeds)
         val breedDropdown = binding.autoCompleteBreed
         breedDropdown.setAdapter(breedAdapter)
 
-        Log.d("FilterDebug", "✅ נתונים הוזנו לאדפטר של גזעים: ${breedDropdown.adapter}")
+        Log.d("FilterDebug", "Breed adapter initialized with data: ${breedDropdown.adapter}")
 
-        // 🔹 כאשר לוחצים על השדה, הצג רשימה
+        // Show dropdown when the field is clicked
         breedDropdown.setOnClickListener {
             breedDropdown.showDropDown()
         }
 
-        // 🔹 הגדרת תיבת בחירה לגיל
+        // Set up age selection dropdown
         val ageAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, availableAges.map { it.toString() })
         val ageDropdown = binding.autoCompleteAge
         ageDropdown.setAdapter(ageAdapter)
 
-        Log.d("FilterDebug", "✅ נתונים הוזנו לאדפטר של גילאים: ${ageDropdown.adapter}")
+        Log.d("FilterDebug", "Age adapter initialized with data: ${ageDropdown.adapter}")
 
-        // 🔹 כאשר לוחצים על השדה, הצג רשימה
+        // Show dropdown when the field is clicked
         ageDropdown.setOnClickListener {
             ageDropdown.showDropDown()
         }
 
-        // 🔹 כפתור "Apply Filter" – שליחת הבחירות חזרה
+        // Apply filter button - send selected values back
         binding.btnApplyFilter.setOnClickListener {
             val selectedName = binding.editTextDogName.text?.toString()?.trim()
             val selectedBreed = binding.autoCompleteBreed.text?.toString()?.trim()
             val selectedAge = binding.autoCompleteAge.text?.toString()?.toIntOrNull()
 
-            Log.d("FilterDebug", "🔍 בחירה סופית של פילטרים: שם = $selectedName, גזע = $selectedBreed, גיל = $selectedAge")
+            Log.d("FilterDebug", "Final filter selection: Name = $selectedName, Breed = $selectedBreed, Age = $selectedAge")
 
             onFilterApplied(
                 if (selectedName.isNullOrEmpty()) null else selectedName,
@@ -73,12 +71,12 @@ class FilterBottomSheetDialog(
                 selectedAge
             )
 
-            Log.d("FilterDebug", "📌 משתמש לחץ על Apply - פילטרים שנבחרו:")
-            Log.d("FilterDebug", "👉 שם: $selectedName")
-            Log.d("FilterDebug", "👉 גזע: $selectedBreed")
-            Log.d("FilterDebug", "👉 גיל: $selectedAge")
+            Log.d("FilterDebug", "User clicked Apply - Selected filters:")
+            Log.d("FilterDebug", "Name: $selectedName")
+            Log.d("FilterDebug", "Breed: $selectedBreed")
+            Log.d("FilterDebug", "Age: $selectedAge")
 
-            dismiss() // סגירת הדיאלוג לאחר בחירה
+            dismiss() // Close the dialog after selection
         }
     }
 

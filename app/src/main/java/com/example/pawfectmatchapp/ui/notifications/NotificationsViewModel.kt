@@ -20,7 +20,7 @@ class NotificationsViewModel : ViewModel() {
     }
 
     private fun fetchArticlesFromFirestore() {
-        db.collection("Articles") // 🔹 שינוי האות הגדולה
+        db.collection("Articles") //capital letter
             .get()
             .addOnSuccessListener { documents ->
                 val articleList = mutableListOf<ArticleData>()
@@ -35,10 +35,9 @@ class NotificationsViewModel : ViewModel() {
                     articleList.add(article)
                 }
                 _articles.value = articleList
-                Log.d("FirestoreDebug", "✅ נטענו ${articleList.size} מאמרים מה-Firestore")
             }
             .addOnFailureListener { e ->
-                Log.e("FirestoreDebug", "❌ שגיאה בקבלת מאמרים: ${e.message}")
+                Log.e("FirestoreDebug", "error in receiving articles: ${e.message}")
             }
     }
 

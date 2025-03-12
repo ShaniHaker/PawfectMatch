@@ -28,7 +28,7 @@ class DashboardViewModel : ViewModel() {
         db.collection("users").document(userId)
             .addSnapshotListener { document, error ->
                 if (error != null) {
-                    Log.e("DashboardViewModel", "❌ שגיאה בקבלת המועדפים: ${error.message}")
+                    Log.e("DashboardViewModel", "error in receiving favorites: ${error.message}")
                     return@addSnapshotListener
                 }
                 if (document != null && document.exists()) {
@@ -39,11 +39,11 @@ class DashboardViewModel : ViewModel() {
     }
 
     private fun fetchDogsByIds(dogIds: List<String>) {
-        Log.d("DashboardViewModel", "🔍 קיבלנו ${dogIds.size} מזהי כלבים: $dogIds") // ✅ בודק את ה-IDים שנשלחים
+        Log.d("DashboardViewModel", "received ${dogIds.size} dog id's: $dogIds") //checking id's
 
         if (dogIds.isEmpty()) {
             _favoriteDogs.value = emptyList()
-            Log.d("DashboardViewModel", "⚠️ אין כלבים להצגה!")
+            Log.d("DashboardViewModel", "no dogs to show!")
             return
         }
 
@@ -52,11 +52,11 @@ class DashboardViewModel : ViewModel() {
         val batches = dogIds.chunked(batchSize)
 
         batches.forEach { batch ->
-            Log.d("DashboardViewModel", "📌 מבצע שאילתת Firestore עבור קבוצה בגודל ${batch.size}: $batch") // 🔍 הדפסת ה-IDים לפני שליחה
+            Log.d("DashboardViewModel", "Firestore ${batch.size}: $batch") // prints id's before sending
 
             db.collection("Dogs").whereIn(FieldPath.documentId(), batch).get()
                 .addOnSuccessListener { documents ->
-                    Log.d("DashboardViewModel", "✅ התקבלו ${documents.size()} תוצאות מהשאילתה!") // ✅ כמה כלבים התקבלו
+                    Log.d("DashboardViewModel", "✅ received ${documents.size()} results!")
 
                     for (document in documents) {
                         val dog = DogData.Builder()
@@ -70,14 +70,13 @@ class DashboardViewModel : ViewModel() {
                             .build()
                         dogsList.add(dog)
 
-                        Log.d("DashboardViewModel", "🐶 נוסף כלב: ${dog.id} - ${dog.name}") // ✅ וידוא שכלב נוסף
                     }
 
                     _favoriteDogs.value = dogsList
-                    Log.d("DashboardViewModel", "📢 בסוף התהליך נוספו ${dogsList.size} כלבים לרשימת המועדפים!") // 🔍 כמה כלבים יש בסוף
+                    Log.d("DashboardViewModel", "were added ${dogsList.size} dogs in favorites!")
                 }
                 .addOnFailureListener { e ->
-                    Log.e("DashboardViewModel", "❌ שגיאה בקבלת הכלבים מ-Firestore: ${e.message}")
+                    Log.e("DashboardViewModel", "error in receiving from-Firestore: ${e.message}")
                     _favoriteDogs.value = emptyList()
                 }
         }
@@ -100,12 +99,13 @@ class DashboardViewModel : ViewModel() {
 
             userDoc.update("favorites", currentFavorites)
                 .addOnSuccessListener {
-                    println("✅ עדכון מועדפים בפיירסטור הצליח")
                     fetchFavoriteDogs()
                 }
                 .addOnFailureListener {
-                    println("❌ שגיאה בעדכון מועדפים")
+
                 }
         }
     }
+    fun getCurrentUser() = FirebaseAuth.getInstance().currentUser
+
 }

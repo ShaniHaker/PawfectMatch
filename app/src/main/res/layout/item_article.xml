@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <!-- תמונת מאמר -->
+
         <ImageView
             android:id="@+id/articleImage"
             android:layout_width="match_parent"
@@ -20,14 +20,12 @@
             android:scaleType="centerCrop"
             android:adjustViewBounds="true"/>
 
-        <!-- 🔹 LinearLayout פנימי לכל התוכן מתחת לתמונה -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:padding="8dp">
 
-            <!-- כותרת המאמר -->
             <TextView
                 android:id="@+id/articleTitle"
                 android:layout_width="wrap_content"
@@ -38,7 +36,6 @@
                 android:paddingTop="8dp"
                 android:textColor="@color/black"/>
 
-            <!-- תקציר המאמר -->
             <TextView
                 android:id="@+id/articleSummary"
                 android:layout_width="wrap_content"
@@ -49,12 +46,12 @@
                 android:textSize="14sp"
                 android:paddingTop="4dp"/>
 
-            <!-- 🔹 כפתור Material לקריאת המאמר -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnReadMore"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Read More"
+                android:textAllCaps="false"
                 android:padding="8dp"
                 android:layout_marginTop="8dp"
                 app:cornerRadius="8dp"

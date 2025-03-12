@@ -12,6 +12,7 @@ import com.example.pawfectmatchapp.databinding.FragmentDashboardBinding
 import com.example.pawfectmatchapp.models.DogData
 import android.util.Log
 import android.widget.Toast
+import com.google.firebase.firestore.FirebaseFirestore
 
 class DashboardFragment : Fragment() {
 
@@ -32,41 +33,65 @@ class DashboardFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // ✅ שינוי ל-LinearLayoutManager כדי להציג בעמודה אחת
+        // define RecyclerView
         binding.recyclerViewFavorites.layoutManager = LinearLayoutManager(requireContext())
 
-
-        // ✅ אתחול האדפטר
+        //  initialize adapter
         dogAdapter = DogAdapter(
             favoriteDogsList,
-            emptyList(),  // ⬅️ יתעדכן מאוחר יותר
+            emptyList(),
             { dog -> openDogDetails(dog) },
             { dog, isFavorite -> dashboardViewModel.updateFavoriteStatus(dog, isFavorite) }
         )
         binding.recyclerViewFavorites.adapter = dogAdapter
 
-        // ✅ מאזין לשינויים במועדפים
+        //listen to changes in the favorites
         dashboardViewModel.favoriteDogs.observe(viewLifecycleOwner) { dogs ->
-            Log.d("DashboardFragment", "🔹 מועדפים התעדכנו: ${dogs.size} כלבים") // 📌 הדפסה ללוג
+            Log.d("DashboardFragment", "🔹 favorites updated: ${dogs.size} dogs")
 
             favoriteDogsList.clear()
             favoriteDogsList.addAll(dogs)
 
-            // ✅ עדכון IDs של המועדפים לפני העדכון הכללי
             dogAdapter.updateFavorites(favoriteDogsList.map { it.id })
 
-            if (dogs.isEmpty()){
-                Toast.makeText(requireContext(), "🐶 Woof woof! Don't forget to add your favorites!",Toast.LENGTH_SHORT).show()
+            if (dogs.isEmpty()) {
+                Toast.makeText(requireContext(), "🐶 Woof woof! Don't forget to add your favorites!", Toast.LENGTH_SHORT).show()
             }
 
-            // 📌 רק קריאה אחת ל- notifyDataSetChanged()
             dogAdapter.notifyDataSetChanged()
+        }
 
+        //share in feed bottom listener
+        binding.btnShareInFeed.setOnClickListener {
+            val currentUser = dashboardViewModel.getCurrentUser()
+            if (currentUser != null) {
+                shareFavoritesToFeed(currentUser.uid)
+            } else {
+                Toast.makeText(requireContext(), "error no user logged in", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
+
+
+//function to listen to button of share in feed and update firestore
+
+    private fun shareFavoritesToFeed(userId: String) {
+        val db = FirebaseFirestore.getInstance()
+        val userDoc = db.collection("users").document(userId)
+
+        userDoc.update("sharedInFeed", true) // mark that user shared his favorites
+            .addOnSuccessListener {
+                Toast.makeText(requireContext(), "Your favorites shared on feed! ✅ ", Toast.LENGTH_SHORT).show()
+            }
+            .addOnFailureListener { e ->
+                Toast.makeText(requireContext(), "error with sharing on feed: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
+    }
+
+
     private fun openDogDetails(dog: DogData) {
-        println("✅ נלחץ על כלב: ${dog.name}")
+        println("press on dog: ${dog.name}")
     }
 
     override fun onDestroyView() {

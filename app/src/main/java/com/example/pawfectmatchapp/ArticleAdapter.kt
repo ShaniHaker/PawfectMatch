@@ -36,16 +36,17 @@ class ArticleAdapter(
         holder.articleTitle.text = article.title
         holder.articleSummary.text = article.summary
 
-        // 📌 הדפסת הנתונים ללוג לבדיקה
-        Log.d("ArticleAdapter", "📌 מאמר מוצג -> Title: ${article.title}, ImageURL: ${article.imageUrl}")
-        // 📸 טעינת תמונה מה-Storage עם Glide (ללא placeholder)
+        // Logging data for debugging
+        Log.d("ArticleAdapter", "Displaying article -> Title: ${article.title}, ImageURL: ${article.imageUrl}")
+
+        // Load image from storage using Glide (without placeholder)
         Glide.with(holder.itemView.context)
             .load(article.imageUrl)
             .into(holder.articleImage)
 
-        // 🖱️ לחיצה על כפתור "קרא עוד" לפתיחת הקישור
+        // Click listener for "Read More" button to open the article URL
         holder.btnReadMore.setOnClickListener {
-            Log.d("ArticleAdapter", "🌍 פתיחת קישור: ${article.articleUrl}")
+            Log.d("ArticleAdapter", "Opening URL: ${article.articleUrl}")
             val intent = Intent(Intent.ACTION_VIEW, Uri.parse(article.articleUrl))
             holder.itemView.context.startActivity(intent)
         }
@@ -54,10 +55,10 @@ class ArticleAdapter(
     override fun getItemCount(): Int = articles.size
 
     /**
-     * ✅ עדכון רשימת המאמרים והצגת השינויים
+     * Updates the list of articles and refreshes the adapter
      */
     fun updateArticles(newArticles: List<ArticleData>) {
-        Log.d("ArticleAdapter", "🔄 עדכון רשימת המאמרים (גודל חדש: ${newArticles.size})")
+        Log.d("ArticleAdapter", "Updating article list (New size: ${newArticles.size})")
         articles.clear()
         articles.addAll(newArticles)
         notifyDataSetChanged()

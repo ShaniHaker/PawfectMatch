@@ -23,49 +23,39 @@ class LoginActivity : AppCompatActivity() {
             insets
         }
 
-        val auth = FirebaseAuth.getInstance()//Firebase Authentication instance
-        val user = auth.currentUser//current logged in user
+        val auth = FirebaseAuth.getInstance()
+        val user = auth.currentUser
 
         if (user != null) {
-            user.reload().addOnCompleteListener { task ->//Firebase checks with the server whether the user still exists.
+            user.reload().addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     if (auth.currentUser == null) {
-                        //if no user is logged in
                         signIn()
                     } else {
-                        //if user exist move to mainactivity
                         transactToNextScreen()
                     }
                 } else {
-                    //error with loading user
                     signIn()
                 }
             }
         } else {
-            // if no logged in them log in screen
             signIn()
         }
-
     }
 
-    // See: https://developer.android.com/training/basics/intents/result
     private val signInLauncher = registerForActivityResult(
         FirebaseAuthUIActivityResultContract(),
     ) { res ->
         this.onSignInResult(res)
     }
 
-
-    private fun signIn() {// Choose authentication providers
-        //when calling this fun it will create providers, login screen and intent
+    private fun signIn() {
         val providers = arrayListOf(
             AuthUI.IdpConfig.EmailBuilder().build(),
             AuthUI.IdpConfig.PhoneBuilder().build(),
             AuthUI.IdpConfig.GoogleBuilder().build(),
+        )
 
-            )
-
-        // Create and launch sign-in intent
         val signInIntent = AuthUI.getInstance()
             .createSignInIntentBuilder()
             .setAvailableProviders(providers)
@@ -78,32 +68,38 @@ class LoginActivity : AppCompatActivity() {
     private fun onSignInResult(result: FirebaseAuthUIAuthenticationResult) {
         val response = result.idpResponse
         if (result.resultCode == RESULT_OK) {
-            // Successfully signed in
             val user = FirebaseAuth.getInstance().currentUser
-            transactToNextScreen()
-            // ...
+            if (user != null) {
+                // transport user to the activity of profile set up after log in is done
+                goToProfileSetup(user.uid)
+            } else {
+                transactToNextScreen()
+            }
         } else {
-            // Sign in failed. If response is null the user canceled the
-            // sign-in flow using the back button. Otherwise check
-            // response.getError().getErrorCode() and handle the error.
-            // ...
-            Toast.makeText(this, "Error : failed logging in", Toast.LENGTH_LONG).show()
-            signIn()//if failed logging in will open again log in screen
+            Toast.makeText(this, "Error: Failed logging in", Toast.LENGTH_LONG).show()
+            signIn()
         }
     }
 
     private fun transactToNextScreen() {
-        intent = Intent(this, MainActivity::class.java)
+        val intent = Intent(this, MainActivity::class.java)
         startActivity(intent)
         finish()
     }
 
-    private fun signOut(){
+    private fun goToProfileSetup(userId: String) {
+        // choose image from gallery and name
+        val intent = Intent(this, ProfileSetUpActivity::class.java)
+        intent.putExtra("USER_ID", userId) // sending UID
+        startActivity(intent)
+        finish()
+    }
+
+    private fun signOut() {
         AuthUI.getInstance()
             .signOut(this)
             .addOnCompleteListener {
-                //....
+                signIn()
             }
     }
-
 }

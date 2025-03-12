@@ -50,6 +50,7 @@ dependencies {
     implementation(libs.androidx.navigation.fragment.ktx)
     implementation(libs.androidx.navigation.ui.ktx)
     implementation(libs.androidx.activity)
+    implementation(libs.places)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -75,4 +76,10 @@ dependencies {
 
     implementation (libs.glide)
     annotationProcessor (libs.compiler)
+
+    //maps
+    implementation(libs.play.services.maps)
+
+    //google places
+    implementation(libs.play.services.places)
 }

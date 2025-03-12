@@ -33,13 +33,13 @@ class NotificationsFragment : Fragment() {
 
         binding.recyclerViewArticles.layoutManager = LinearLayoutManager(requireContext())
 
-        // ✅ אתחול האדפטר עם רשימה ריקה
+        // empty list initialize
         articleAdapter = ArticleAdapter(articleList)
         binding.recyclerViewArticles.adapter = articleAdapter
 
-        // ✅ האזנה לשינויים בנתוני המאמרים
+        // listen to changes on the articles
         notificationsViewModel.articles.observe(viewLifecycleOwner) { articles ->
-            Log.d("NotificationsFragment", "📌 קיבלנו ${articles.size} מאמרים מה-Firestore")
+            Log.d("NotificationsFragment", "📌 received: ${articles.size} articles from-Firestore")
             articleList.clear()
             articleList.addAll(articles)
             articleAdapter.notifyDataSetChanged()

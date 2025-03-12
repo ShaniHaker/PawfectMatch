@@ -22,4 +22,10 @@
         android:name="com.example.pawfectmatchapp.ui.notifications.NotificationsFragment"
         android:label="@string/title_About_us"
         tools:layout="@layout/fragment_notifications" />
+
+    <fragment
+        android:id="@+id/navigation_Feed"
+        android:name="com.example.pawfectmatchapp.ui.feed.FeedFragment"
+        android:label="@string/title_feed"
+        tools:layout= "@layout/fragment_feed"/>
 </navigation>

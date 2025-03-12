@@ -16,12 +16,11 @@ class FireStoreActivity : AppCompatActivity() {
     private lateinit var binding: ActivityFireStoreBinding
 
     private val db = Firebase.firestore
-    private val dogsCollection = db.collection(Constants.DB.DOGS_COLLECTION_REF) // 🔹 קולקציה לכלבים
-    private val usersCollection = db.collection("Users") // 🔹 קולקציה למשתמשים
-    private val articlesCollection = db.collection("Articles") // 🔹 קולקשן למאמרים
+    private val dogsCollection = db.collection(Constants.DB.DOGS_COLLECTION_REF) // Collection for dogs
+    private val usersCollection = db.collection("Users") // Collection for users
+    private val articlesCollection = db.collection("Articles") // Collection for articles
 
-
-    private var userFavorites: List<String> = emptyList() // 🔹 רשימת הכלבים המועדפים של המשתמש
+    private var userFavorites: List<String> = emptyList() // List of user's favorite dogs
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,10 +33,9 @@ class FireStoreActivity : AppCompatActivity() {
             insets
         }
 
-        // ✅ המשתמש כבר נבדק ונוסף בפיירסטור דרך MainActivity, לכן אין צורך לבדוק אותו שוב כאן!
-        // currentUser?.let { user -> createUserIfNotExist(user.uid, user.email) }
+        // The user is already checked and added in Firestore through MainActivity, so no need to check again here
 
-        // ✅ הבאת המועדפים של המשתמש (אפשר להשאיר כדי ללמוד איך זה עובד)
+        // Fetch the user's favorite dogs
         val currentUser = FirebaseAuth.getInstance().currentUser
         currentUser?.let { user ->
             getFavoriteDogs(user.uid) { favorites ->
@@ -45,15 +43,15 @@ class FireStoreActivity : AppCompatActivity() {
             }
         }
 
-        // ✅ אפשר להשאיר את זה כדי ללמוד איך להעלות נתונים לפיירסטור אבל זה לא הכרחי
+        // one time uploaded to firestore dogs
         // addDogsCollectionToFireStore()
 
-        //one time for uploading article data to firestore
-       // uploadArticlesToFirestore()
+        // One-time upload of article data to Firestore
+        // uploadArticlesToFirestore()
     }
 
     /**
-     * ✅ פונקציה שמביאה את רשימת הכלבים המועדפים של המשתמש
+     * Fetches the user's favorite dogs
      */
     fun getFavoriteDogs(userId: String, callback: (List<String>) -> Unit) {
         usersCollection.document(userId).get()
@@ -66,13 +64,13 @@ class FireStoreActivity : AppCompatActivity() {
                 }
             }
             .addOnFailureListener { e ->
-                println("❌ שגיאה בהבאת מועדפים: ${e.message}")
+                println("Error fetching favorites: ${e.message}")
                 callback(emptyList())
             }
     }
 
     /**
-     * ✅ פונקציה להוספת כלב למועדפים של המשתמש
+     * Adds a dog to the user's favorites
      */
     fun addFavoriteDog(userId: String, dogId: String) {
         val userDoc = usersCollection.document(userId)
@@ -83,15 +81,15 @@ class FireStoreActivity : AppCompatActivity() {
                 if (!favorites.contains(dogId)) {
                     favorites.add(dogId)
                     userDoc.update("favorites", favorites)
-                        .addOnSuccessListener { println("✅ הכלב נוסף למועדפים") }
-                        .addOnFailureListener { e -> println("❌ שגיאה בהוספת הכלב למועדפים: ${e.message}") }
+                        .addOnSuccessListener { println("Dog added to favorites") }
+                        .addOnFailureListener { e -> println("Error adding dog to favorites: ${e.message}") }
                 }
             }
         }
     }
 
     /**
-     * ✅ פונקציה להסרת כלב מהמועדפים של המשתמש
+     * Removes a dog from the user's favorites
      */
     fun removeFavoriteDog(userId: String, dogId: String) {
         val userDoc = usersCollection.document(userId)
@@ -102,15 +100,15 @@ class FireStoreActivity : AppCompatActivity() {
                 if (favorites.contains(dogId)) {
                     favorites.remove(dogId)
                     userDoc.update("favorites", favorites)
-                        .addOnSuccessListener { println("✅ הכלב הוסר מהמועדפים") }
-                        .addOnFailureListener { e -> println("❌ שגיאה בהסרת הכלב מהמועדפים: ${e.message}") }
+                        .addOnSuccessListener { println("Dog removed from favorites") }
+                        .addOnFailureListener { e -> println("Error removing dog from favorites: ${e.message}") }
                 }
             }
         }
     }
 
     /**
-     * 🛠️ פונקציה שמעלה נתונים על כלבים לפיירסטור (לא חובה לריצה, אבל טוב לתרגול)
+     * Uploads dog data to Firestore (not required for execution, but useful for practice)
      */
     private fun addDogsCollectionToFireStore() {
         addDog("Buddy", "Golden Retriever", 3, "Male", "Friendly and playful dog",
@@ -124,7 +122,7 @@ class FireStoreActivity : AppCompatActivity() {
     }
 
     /**
-     * ✅ פונקציה להוספת כלב בודד לפיירסטור
+     * Adds a single dog to Firestore
      */
     private fun addDog(name: String, breed: String, age: Int, gender: String, description: String, imageUrl: String) {
         val animal = hashMapOf(
@@ -137,10 +135,9 @@ class FireStoreActivity : AppCompatActivity() {
         )
 
         dogsCollection.add(animal)
-            .addOnSuccessListener { println("✅ הכלב נוסף בהצלחה: $name") }
-            .addOnFailureListener { e -> println("❌ שגיאה בהוספת הכלב: ${e.message}") }
+            .addOnSuccessListener { println("Dog added successfully: $name") }
+            .addOnFailureListener { e -> println("Error adding dog: ${e.message}") }
     }
-
 
     private fun uploadArticlesToFirestore() {
         val articles = listOf(
@@ -166,8 +163,8 @@ class FireStoreActivity : AppCompatActivity() {
 
         for (article in articles) {
             articlesCollection.add(article)
-                .addOnSuccessListener { println("✅ מאמר נוסף בהצלחה: ${article["title"]}") }
-                .addOnFailureListener { e -> println("❌ שגיאה בהעלאת מאמר: ${e.message}") }
+                .addOnSuccessListener { println("Article added successfully: ${article["title"]}") }
+                .addOnFailureListener { e -> println("Error uploading article: ${e.message}") }
         }
     }
 }

@@ -28,7 +28,7 @@ class HomeFragment : Fragment() {
     private val auth = FirebaseAuth.getInstance()
     private val db = FirebaseFirestore.getInstance()
 
-    // משתנים לשמירת הפילטרים שנבחרו
+    // Variables to store selected filters
     private var selectedBreed: String? = null
     private var selectedAge: Int? = null
     private var selectedName: String? = null
@@ -43,7 +43,7 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // ✅ אתחול האדפטר
+        // Initialize the adapter
         dogAdapter = DogAdapter(
             dogList,
             favoriteDogs,
@@ -54,46 +54,46 @@ class HomeFragment : Fragment() {
         binding.recyclerViewDogs.layoutManager = LinearLayoutManager(requireContext())
         binding.recyclerViewDogs.adapter = dogAdapter
 
-        // ✅ האזנה לנתוני הכלבים מה-ViewModel
+        // Listen for dog data updates from ViewModel
         homeViewModel.dogs.observe(viewLifecycleOwner) { dogs ->
             dogList.clear()
             dogList.addAll(dogs)
-            applyFilters() // מבצע סינון במקרה שיש פילטרים פעילים
+            applyFilters() // Apply filters if any are selected
         }
 
-        // ✅ האזנה לנתוני המועדפים
+        // Listen for favorite dog updates
         homeViewModel.favoriteDogs.observe(viewLifecycleOwner) { favorites ->
             dogAdapter.updateFavorites(favorites)
         }
 
-        // ✅ טעינת הכלבים מה-Firestore
+        // Fetch dog data from Firestore
         homeViewModel.fetchDogsFromFirestore()
 
-        // ✅ האזנה לכפתור הסינון
+        // Listen for filter button click
         binding.btnFilter.setOnClickListener {
             openFilterDialog()
         }
 
-        // ✅ האזנה לכפתור ניקוי הסינון
+        // Listen for clear filter button click
         binding.btnClearFilter.setOnClickListener {
             clearFilters()
         }
     }
 
     /**
-     * ✅ פתיחת דיאלוג הפילטרים
+     * Opens the filter dialog
      */
     private fun openFilterDialog() {
         val availableBreeds = homeViewModel.getAvailableBreeds()
         val availableAges = homeViewModel.getAvailableAges()
 
-        Log.d("FilterDebug", "✅ שליחת גזעים לדיאלוג: $availableBreeds")
-        Log.d("FilterDebug", "✅ שליחת גילאים לדיאלוג: $availableAges")
+        Log.d("FilterDebug", "Sending breeds to filter dialog: $availableBreeds")
+        Log.d("FilterDebug", "Sending ages to filter dialog: $availableAges")
 
         val filterDialog = FilterBottomSheetDialog(
             availableBreeds,
             availableAges
-        ) { breed, name, age ->
+        ) { name, breed, age ->
             selectedBreed = breed
             selectedName = name
             selectedAge = age
@@ -103,10 +103,7 @@ class HomeFragment : Fragment() {
     }
 
     /**
-     * ✅ סינון הכלבים בהתאם לקטגוריות שנבחרו
-     */
-    /**
-     * ✅ סינון הכלבים בהתאם לקטגוריות שנבחרו
+     * Filters the dog list based on selected criteria
      */
     private fun applyFilters() {
         val filteredList = homeViewModel.dogs.value?.filter { dog ->
@@ -118,41 +115,34 @@ class HomeFragment : Fragment() {
             val selectedNameFixed = selectedName?.trim()
             val selectedAgeFixed = selectedAge
 
-            // ✅ בדיקות התאמה לכל שדה בנפרד
-            val nameMatch = selectedNameFixed?.let { it.equals(dogBreed, ignoreCase = true) } ?: true
-            val breedMatch = selectedBreedFixed?.let { it.equals(dogName, ignoreCase = true) } ?: true
+            // Check if each filter criterion matches
+            val nameMatch = selectedNameFixed?.let { it.equals(dogName, ignoreCase = true) } ?: true
+            val breedMatch = selectedBreedFixed?.let { it.equals(dogBreed, ignoreCase = true) } ?: true
             val ageMatch = selectedAgeFixed?.let { it == dogAge } ?: true
 
             nameMatch && breedMatch && ageMatch
         } ?: emptyList()
 
         if (filteredList.isEmpty()) {
-            Log.w("FilterDebug", "❌ No matching dogs found.")
+            Log.w("FilterDebug", "No matching dogs found.")
 
-            // ✅ הצגת טוסט למשתמש שאין התאמות
+            // Show a toast message to inform the user
             requireActivity().runOnUiThread {
-                Toast.makeText(requireContext(), "❌ No matching dogs found. Try different filters!", Toast.LENGTH_LONG).show()
+                Toast.makeText(requireContext(), "No matching dogs found. Try different filters!", Toast.LENGTH_LONG).show()
             }
 
-            // ✅ במקום להציג את כל הכלבים מחדש, נשאיר את הרשימה ריקה
+            // Keep the list empty instead of showing all dogs again
             dogAdapter.updateDogs(emptyList())
 
         } else {
-            Log.d("FilterDebug", "✅ נמצא ${filteredList.size} כלבים תואמים לסינון.")
+            Log.d("FilterDebug", "${filteredList.size} dogs match the filters.")
             dogAdapter.updateDogs(filteredList)
         }
     }
 
 
+     // Clears all selected filters and restores the full list
 
-
-
-
-
-
-    /**
-     * ✅ פונקציה לניקוי הסינון והצגת כל הכלבים מחדש
-     */
     private fun clearFilters() {
         selectedBreed = null
         selectedName = null
@@ -160,9 +150,9 @@ class HomeFragment : Fragment() {
         dogAdapter.updateDogs(homeViewModel.dogs.value ?: emptyList())
     }
 
-    /**
-     * ✅ עדכון מצב המועדפים ב-Firestore
-     */
+
+     // Updates the favorite dogs list in Firestore
+
     private fun handleFavoriteClick(dog: DogData, isFavorite: Boolean) {
         val currentUser = auth.currentUser ?: return
         val userDoc = db.collection("users").document(currentUser.uid)
@@ -178,10 +168,10 @@ class HomeFragment : Fragment() {
 
             userDoc.update("favorites", favorites)
                 .addOnSuccessListener {
-                    println("✅ Favorites updated successfully")
+                    println("Favorites updated successfully")
                     homeViewModel.fetchFavoriteDogs()
                 }
-                .addOnFailureListener { println("❌ Failed to update favorites") }
+                .addOnFailureListener { println("Failed to update favorites") }
         }
     }
 
