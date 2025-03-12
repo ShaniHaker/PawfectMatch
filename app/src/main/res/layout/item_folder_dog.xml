@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp"
+    app:cardCornerRadius="12dp"
+    >
+    <!--item dog defines the layout of each dog item-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="0dp"
+        >
+
+
+            <!-- Dog Image (Will be loaded dynamically using Glide) -->
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/dogImage"
+                android:layout_width="match_parent"
+                android:layout_height="250dp"
+                android:scaleType="centerCrop"
+                android:adjustViewBounds="true"/>
+
+
+
+        <!-- Dog Name + Age + More Options Button -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingTop="8dp"
+            android:background="#FBF4F4"
+
+            >
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:layout_marginLeft="10dp"
+                >
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/dogName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Dog Name"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/black"/>
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/dogAge"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Age: 3"
+                    android:textSize="16sp"
+                    android:textColor="@color/black"/>
+            </LinearLayout>
+
+            <!-- More Options Button -->
+            <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+                android:id="@+id/main_BTN"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentRight="true"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                app:icon="@drawable/dots"
+                app:iconSize="30dp"
+                android:backgroundTint="#FBF4F4"
+                app:iconTint="@color/black"
+                android:clickable="true"
+                android:contentDescription="nu"
+                style="?borderlessButtonStyle"
+
+                />
+        </LinearLayout>
+
+        <!-- Expandable Info (Initially Hidden) -->
+        <LinearLayout
+            android:id="@+id/expandableLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone"
+            android:paddingTop="8dp"
+            android:background="#EDE0DB">
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/dogBreed"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Breed: Labrador"
+                android:textSize="16sp"
+                android:textColor="@color/black"/>
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/dogGender"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Gender: Male"
+                android:textSize="16sp"
+                android:textColor="@color/black"/>
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/dogDescription"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Description: Very friendly and playful"
+                android:textSize="16sp"
+                android:textColor="@color/black"/>
+
+            <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+                android:id="@+id/btnShelterDetails"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="press to View Shelter"
+                android:textSize="15dp"
+                android:textColor="@color/white"
+                app:cornerRadius="8dp"
+                app:backgroundTint="#FC6D4242"
+                app:strokeWidth="3dp"
+                app:strokeColor="@color/black"
+                android:layout_marginTop="8dp"
+                app:icon="@drawable/baseline_location_pin_24"
+                app:iconSize="20dp"
+                app:iconTint="@color/white"
+                />
+
+
+        </LinearLayout>
+
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

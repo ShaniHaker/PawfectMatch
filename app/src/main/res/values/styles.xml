@@ -1,0 +1,8 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- עיצוב תמונה עגולה -->
+    <style name="ShapeAppearance.Image.Round" parent="ShapeAppearance.MaterialComponents.LargeComponent">
+        <item name="cornerSize">50%</item> <!-- הופך תמונה לעיגול -->
+    </style>
+
+</resources>
