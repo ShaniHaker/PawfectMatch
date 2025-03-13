@@ -1,6 +1,7 @@
 Pawfect Match - Dog Adoption App 🐶❤️
-About the App
-Pawfect Match is a mobile application designed to help users find and adopt dogs in need of a loving home. The app provides a seamless user experience, allowing users to browse through available dogs, filter their search, save their favorite matches, and access useful information about dog adoption.
+
+**About the App**
+Pawfect Match is a mobile application designed to help users find and adopt dogs in need of a loving home. The app provides a smooth user experience, allowing users to browse through available dogs, filter their search, save their favorite matches, and access useful information about dog adoption.
 
 Getting Started
 Upon launching the app, users must sign in using one of the following methods:
@@ -57,3 +58,6 @@ A title
 A short summary
 An image preview
 Users can click on an article to be redirected to the full content in an external web browser.
+
+Also the user can enter the feed screen and there he can view what other users chose to share, it present folder that cantain for each user his favorites dog so by that the users can view what other users added to their favorites.
+
